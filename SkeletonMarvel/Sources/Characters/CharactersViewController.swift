@@ -64,6 +64,7 @@ fileprivate extension CharactersViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.reuseIdentifier())
         tableView.register(CharactersTableViewCell.self, forCellReuseIdentifier: CharactersTableViewCell.reuseIdentifier())
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
     }

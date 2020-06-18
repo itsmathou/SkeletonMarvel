@@ -19,6 +19,7 @@
 		B5A3F9A62498088600192843 /* ResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3F9A52498088600192843 /* ResponseModel.swift */; };
 		B5A3F9A8249808DB00192843 /* CharactersDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3F9A7249808DB00192843 /* CharactersDataController.swift */; };
 		B5A3F9AA24980C7E00192843 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3F9A924980C7E00192843 /* APIKeys.swift */; };
+		B5E17724249C158200530126 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E17723249C158200530126 /* SkeletonView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		B5A3F9A52498088600192843 /* ResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModel.swift; sourceTree = "<group>"; };
 		B5A3F9A7249808DB00192843 /* CharactersDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDataController.swift; sourceTree = "<group>"; };
 		B5A3F9A924980C7E00192843 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
+		B5E17723249C158200530126 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 		B5313F4A249C024900D77F02 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				B5E17722249C156B00530126 /* Views */,
 				B543D35024981E370062166A /* Characters */,
 				B5A3F99F2498026000192843 /* Coordinators */,
 				B5A3F9A42498087700192843 /* Networking */,
@@ -144,6 +147,14 @@
 				B5A3F9A924980C7E00192843 /* APIKeys.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		B5E17722249C156B00530126 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B5E17723249C158200530126 /* SkeletonView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B543D35224981E4E0062166A /* CharactersViewModel.swift in Sources */,
+				B5E17724249C158200530126 /* SkeletonView.swift in Sources */,
 				B5A3F9A32498029D00192843 /* RootCoordinator.swift in Sources */,
 				B587F4DD249A9DF800D80F7B /* CharactersTableViewCell.swift in Sources */,
 				B5A3F9AA24980C7E00192843 /* APIKeys.swift in Sources */,

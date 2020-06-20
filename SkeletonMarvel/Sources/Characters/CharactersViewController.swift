@@ -12,6 +12,7 @@ final class CharactersViewController: UIViewController {
     
     let tableViewController: UITableViewController = UITableViewController(style: .plain)
     private let viewModel: CharactersViewModelType
+    private var shouldAnimate: Bool = true
     
     var tableView: UITableView {
         return tableViewController.tableView
@@ -28,9 +29,9 @@ final class CharactersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchList()
         setupViews()
         setupTableView()
+        fetchList()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,12 +41,7 @@ final class CharactersViewController: UIViewController {
     
     func fetchList() {
         viewModel.fetchCharacters { [weak self] result in
-            switch result {
-            case .success:
-                self?.tableView.reloadData()
-            case .failure(let error):
-                print("Error:", error)
-            }
+            self?.handleResult(result)
         }
     }
 }
@@ -55,12 +51,13 @@ fileprivate extension CharactersViewController {
         view.addSubview(tableView)
         view.backgroundColor = .white
         tableView.backgroundColor = .white
-        title = "TITLE"
+        title = "Marvel Characters"
         
         initializeConstraints()
     }
     
     func setupTableView() {
+        viewModel.setupPlaceholders()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.reuseIdentifier())
         tableView.register(CharactersTableViewCell.self, forCellReuseIdentifier: CharactersTableViewCell.reuseIdentifier())
         tableView.rowHeight = UITableView.automaticDimension
@@ -81,6 +78,16 @@ fileprivate extension CharactersViewController {
         
         NSLayoutConstraint.activate(constraints)
     }
+    
+    func handleResult(_ result: Result<[Character], Error>) {
+        shouldAnimate = false
+        switch result {
+        case .success:
+            self.tableView.reloadData()
+        case .failure(let error):
+            print("Error:", error)
+        }
+    }
 }
 
 extension CharactersViewController: UITableViewDataSource {
@@ -94,6 +101,12 @@ extension CharactersViewController: UITableViewDataSource {
         }
         let item = viewModel.characters[indexPath.row]
         cell.update(with: item.name)
+        
+        if self.shouldAnimate {
+            cell.startAnimation()
+        } else {
+            cell.stopAnimation()
+        }
         
         return cell
     }

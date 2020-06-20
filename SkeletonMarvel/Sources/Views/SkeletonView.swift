@@ -17,12 +17,25 @@ final class SkeletonView: UIView {
     let gradientMovingColor: CGColor = UIColor(white: 0.80, alpha: 1.0).cgColor
     let movingAnimationDuration: CFTimeInterval = 0.8
     let delayBetweenAnimationLoops: CFTimeInterval = 1.0
+    let animationKey: String = "locations"
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         setupGradient()
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
         setupAnimation()
     }
     
+    override func removeFromSuperview() {
+        super.removeFromSuperview()
+        stopAnimation()
+    }
+}
+
+private extension SkeletonView {
     func setupGradient() {
         gradientLayer.frame = bounds
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
@@ -33,7 +46,7 @@ final class SkeletonView: UIView {
     }
     
     func setupAnimation() {
-        let animation = CABasicAnimation(keyPath: "locations")
+        let animation = CABasicAnimation(keyPath: animationKey)
         animation.fromValue = startLocations
         animation.toValue = endLocations
         animation.duration = movingAnimationDuration
@@ -45,5 +58,9 @@ final class SkeletonView: UIView {
         groupAnimation.animations = [animation]
         groupAnimation.repeatCount = .infinity
         gradientLayer.add(groupAnimation, forKey: animation.keyPath)
+    }
+    
+    func stopAnimation() {
+        layer.removeAnimation(forKey: animationKey)
     }
 }

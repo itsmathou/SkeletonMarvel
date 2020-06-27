@@ -45,7 +45,6 @@ final class CharactersViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
-        viewModel.setupPlaceholders()
     }
     
 //    func fetchList() {
@@ -67,10 +66,8 @@ fileprivate extension CharactersViewController {
     }
     
     func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Character> { cell, indexPath, item in
-            var content = cell.defaultContentConfiguration()
-            content.text = "\(item)"
-            cell.contentConfiguration = content
+        let cellRegistration = UICollectionView.CellRegistration<CharactersCollectionViewListCell, Character> { cell, indexPath, item in
+            cell.update(with: item.name)
             
         }
         

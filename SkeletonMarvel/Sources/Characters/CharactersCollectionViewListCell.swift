@@ -1,5 +1,5 @@
 //
-//  CharactersTableViewCell.swift
+//  CharactersCollectionViewListCell.swift
 //  SkeletonMarvel
 //
 //  Created by Mathilde Ferrand on 17/06/2020.
@@ -8,15 +8,14 @@
 
 import UIKit
 
-final class CharactersTableViewCell: UITableViewCell {
+final class CharactersCollectionViewListCell: UICollectionViewListCell {
     
     let nameLabel: UILabel = UILabel()
     let skeletonView: SkeletonView = SkeletonView()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupViews()
-        startAnimation()
     }
     
     required init?(coder: NSCoder) {
@@ -41,11 +40,11 @@ final class CharactersTableViewCell: UITableViewCell {
     }
 }
 
-private extension CharactersTableViewCell {
+private extension CharactersCollectionViewListCell {
     func setupViews() {
         contentView.addSubview(nameLabel)
         
-        selectionStyle = .none
+//        selectionStyle = .none
         backgroundColor = .clear
         
         nameLabel.textColor = .black

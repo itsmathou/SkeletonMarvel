@@ -23,7 +23,7 @@ protocol CharactersDataControllerType {
 final class CharactersDataController: CharactersDataControllerType {
     
     func fetchList(completion: @escaping CharactersListCompletion) {
-        let urlString: String = "https://gateway.marvel.com/v1/public/characters?ts=1&apikey=\(APIKey.marvelKey)&limit=10&orderBy=name"
+        let urlString: String = "https://gateway.marvel.com/v1/public/characters?ts=1&apikey=\(APIKey.marvelKey)&limit=50&orderBy=name"
         
         guard let url = URL(string: urlString) else {
             completion(Result.failure(FetchListErrors.invalidURL))

@@ -21,7 +21,6 @@ struct DataClass: Codable {
 
 // MARK: - Result
 struct Character: Codable, Hashable {
-    let identifier: UUID
     let id: Int
     let name, description: String
     let thumbnail: Thumbnail

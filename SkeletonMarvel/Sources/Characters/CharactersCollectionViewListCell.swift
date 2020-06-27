@@ -11,7 +11,6 @@ import UIKit
 final class CharactersCollectionViewListCell: UICollectionViewListCell {
     
     let nameLabel: UILabel = UILabel()
-    let skeletonView: SkeletonView = SkeletonView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,21 +29,11 @@ final class CharactersCollectionViewListCell: UICollectionViewListCell {
     func update(with name: String) {
         nameLabel.text = name
     }
-    
-    func startAnimation() {
-        setupAnimationView()
-    }
-    
-    func stopAnimation() {
-        disableAnimation()
-    }
 }
 
 private extension CharactersCollectionViewListCell {
     func setupViews() {
         contentView.addSubview(nameLabel)
-        
-//        selectionStyle = .none
         backgroundColor = .clear
         
         nameLabel.textColor = .black
@@ -77,21 +66,5 @@ private extension CharactersCollectionViewListCell {
         path.move(to: CGPoint(x: rect.minX + indentation, y: yPos))
         path.addLine(to: CGPoint(x: rect.maxX - indentation, y: yPos))
         path.stroke()
-    }
-    
-    func setupAnimationView() {
-        contentView.addSubview(skeletonView)
-        
-        skeletonView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            skeletonView.topAnchor.constraint(equalTo: nameLabel.topAnchor),
-            skeletonView.bottomAnchor.constraint(equalTo: nameLabel.bottomAnchor),
-            skeletonView.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            skeletonView.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor)
-        ])
-    }
-    
-    func disableAnimation() {
-        skeletonView.removeFromSuperview()
     }
 }

@@ -22,9 +22,9 @@ final class CharactersViewController: UIViewController {
     }()
     
     var dataSource: UICollectionViewDiffableDataSource<Section, Character>?
+    var snapshot = NSDiffableDataSourceSnapshot<Section, Character>()
     
     private let viewModel: CharactersViewModelType
-    private var shouldAnimate: Bool = true
     
     init(viewModel: CharactersViewModelType) {
         self.viewModel = viewModel
@@ -39,7 +39,7 @@ final class CharactersViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupCollectionView()
-//        fetchList()
+        fetchList()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,11 +47,11 @@ final class CharactersViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-//    func fetchList() {
-//        viewModel.fetchCharacters { [weak self] result in
-//            self?.handleResult(result)
-//        }
-//    }
+    func fetchList() {
+        viewModel.fetchCharacters { [weak self] result in
+            self?.handleResult(result)
+        }
+    }
 }
 
 fileprivate extension CharactersViewController {
@@ -68,7 +68,6 @@ fileprivate extension CharactersViewController {
     func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<CharactersCollectionViewListCell, Character> { cell, indexPath, item in
             cell.update(with: item.name)
-            
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, Character>(collectionView: collectionView) {
@@ -77,19 +76,18 @@ fileprivate extension CharactersViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
         }
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Character>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(viewModel.setupPlaceholders())
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        snapshot.appendItems(viewModel.characters)
+        dataSource?.apply(snapshot, animatingDifferences: false)
     }
     
-//    func handleResult(_ result: Result<[Character], Error>) {
-//        shouldAnimate = false
-//        switch result {
-//        case .success:
-//            self.tableView.reloadData()
-//        case .failure(let error):
-//            print("Error:", error)
-//        }
-//    }
+    func handleResult(_ result: Result<[Character], Error>) {
+        switch result {
+        case .success(let characters):
+            snapshot.appendItems(characters)
+            dataSource?.apply(snapshot, animatingDifferences: true)
+        case .failure(let error):
+            print("Error:", error)
+        }
+    }
 }

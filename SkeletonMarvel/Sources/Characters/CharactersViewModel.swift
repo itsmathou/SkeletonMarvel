@@ -13,7 +13,6 @@ typealias FetchCharactersCompletion = (Result<[Character], Error>) -> Void
 protocol CharactersViewModelType {
     var characters: [Character] { get }
     func fetchCharacters(completion: @escaping FetchCharactersCompletion)
-    func setupPlaceholders() -> [Character]
 }
 
 final class CharactersViewModel: CharactersViewModelType {
@@ -24,13 +23,6 @@ final class CharactersViewModel: CharactersViewModelType {
     init(dataController: CharactersDataControllerType) {
         self.dataController = dataController
         self.characters = []
-    }
-    
-    func setupPlaceholders() -> [Character] {
-        for _ in 0..<99 {
-            characters.append(Character(identifier: UUID(), id: 1, name: "test", description: "", thumbnail: .init(path: "", thumbnailExtension: .jpg), resourceURI: "", urls: [.init(type: .comiclink, url: "")]))
-        }
-        return characters
     }
     
     func fetchCharacters(completion: @escaping FetchCharactersCompletion) {

@@ -13,7 +13,7 @@ typealias FetchCharactersCompletion = (Result<[Character], Error>) -> Void
 protocol CharactersViewModelType {
     var characters: [Character] { get }
     func fetchCharacters(completion: @escaping FetchCharactersCompletion)
-    func setupPlaceholders()
+    func setupPlaceholders() -> [Character]
 }
 
 final class CharactersViewModel: CharactersViewModelType {
@@ -26,13 +26,11 @@ final class CharactersViewModel: CharactersViewModelType {
         self.characters = []
     }
     
-    func setupPlaceholders() {
-        characters = [
-            Character(id: 1, name: "test", description: "", thumbnail: .init(path: "", thumbnailExtension: .jpg), resourceURI: "", urls: [.init(type: .comiclink, url: "")]),
-            Character(id: 1, name: "test", description: "", thumbnail: .init(path: "", thumbnailExtension: .jpg), resourceURI: "", urls: [.init(type: .comiclink, url: "")]),
-            Character(id: 1, name: "test", description: "", thumbnail: .init(path: "", thumbnailExtension: .jpg), resourceURI: "", urls: [.init(type: .comiclink, url: "")]),
-            Character(id: 1, name: "test", description: "", thumbnail: .init(path: "", thumbnailExtension: .jpg), resourceURI: "", urls: [.init(type: .comiclink, url: "")])
-        ]
+    func setupPlaceholders() -> [Character] {
+        for _ in 0..<99 {
+            characters.append(Character(identifier: UUID(), id: 1, name: "test", description: "", thumbnail: .init(path: "", thumbnailExtension: .jpg), resourceURI: "", urls: [.init(type: .comiclink, url: "")]))
+        }
+        return characters
     }
     
     func fetchCharacters(completion: @escaping FetchCharactersCompletion) {

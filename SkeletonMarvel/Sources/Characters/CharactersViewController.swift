@@ -10,13 +10,21 @@ import UIKit
 
 final class CharactersViewController: UIViewController {
     
-    let tableViewController: UITableViewController = UITableViewController(style: .plain)
+    enum Section {
+        case main
+    }
+    
+    lazy var collectionView: UICollectionView = {
+        let config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        let collectionView = UICollectionView(frame: view.bounds,
+                                              collectionViewLayout: UICollectionViewCompositionalLayout.list(using: config))
+        return collectionView
+    }()
+    
+    var dataSource: UICollectionViewDiffableDataSource<Section, Character>?
+    
     private let viewModel: CharactersViewModelType
     private var shouldAnimate: Bool = true
-    
-    var tableView: UITableView {
-        return tableViewController.tableView
-    }
     
     init(viewModel: CharactersViewModelType) {
         self.viewModel = viewModel
@@ -30,96 +38,61 @@ final class CharactersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        setupTableView()
-        fetchList()
+        setupCollectionView()
+//        fetchList()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
+        viewModel.setupPlaceholders()
     }
     
-    func fetchList() {
-        viewModel.fetchCharacters { [weak self] result in
-            self?.handleResult(result)
-        }
-    }
+//    func fetchList() {
+//        viewModel.fetchCharacters { [weak self] result in
+//            self?.handleResult(result)
+//        }
+//    }
 }
 
 fileprivate extension CharactersViewController {
     func setupViews() {
-        view.addSubview(tableView)
-        view.backgroundColor = .white
-        tableView.backgroundColor = .white
+        view.addSubview(collectionView)
         title = "Marvel Characters"
-        
-        initializeConstraints()
     }
     
-    func setupTableView() {
-        viewModel.setupPlaceholders()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.reuseIdentifier())
-        tableView.register(CharactersTableViewCell.self, forCellReuseIdentifier: CharactersTableViewCell.reuseIdentifier())
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.separatorStyle = .none
-        tableView.dataSource = self
-        tableView.delegate = self
+    func setupCollectionView() {
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        configureDataSource()
     }
     
-    func initializeConstraints() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints: [NSLayoutConstraint] = [
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-    }
-    
-    func handleResult(_ result: Result<[Character], Error>) {
-        shouldAnimate = false
-        switch result {
-        case .success:
-            self.tableView.reloadData()
-        case .failure(let error):
-            print("Error:", error)
-        }
-    }
-}
-
-extension CharactersViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.characters.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CharactersTableViewCell.reuseIdentifier(), for: indexPath) as? CharactersTableViewCell else {
-            return UITableViewCell()
-        }
-        let item = viewModel.characters[indexPath.row]
-        cell.update(with: item.name)
-        
-        if self.shouldAnimate {
-            cell.startAnimation()
-        } else {
-            cell.stopAnimation()
+    func configureDataSource() {
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Character> { cell, indexPath, item in
+            var content = cell.defaultContentConfiguration()
+            content.text = "\(item)"
+            cell.contentConfiguration = content
+            
         }
         
-        return cell
+        dataSource = UICollectionViewDiffableDataSource<Section, Character>(collectionView: collectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Character) -> UICollectionViewCell? in
+            
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+        }
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Character>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(viewModel.setupPlaceholders())
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
-}
-
-extension CharactersViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // for another time
-    }
-}
-
-extension UITableViewCell {
-    static func reuseIdentifier() -> String {
-        return String(describing: self)
-    }
+    
+//    func handleResult(_ result: Result<[Character], Error>) {
+//        shouldAnimate = false
+//        switch result {
+//        case .success:
+//            self.tableView.reloadData()
+//        case .failure(let error):
+//            print("Error:", error)
+//        }
+//    }
 }

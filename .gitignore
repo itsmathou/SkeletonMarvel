@@ -2,6 +2,10 @@
 DerivedData/
 xcuserdata
 
+SkeletonMarvel.xcodeproj/
+SkeletonMarvel.xcworkspace/
+Derived/InfoPlists/
+
 .DS_Store
 
 SkeletonMarvel/Sources/Networking/APIKeys.swift
